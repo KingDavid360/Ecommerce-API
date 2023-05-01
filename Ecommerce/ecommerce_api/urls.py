@@ -1,8 +1,9 @@
 from django.urls import path
 from . import views
 
-urlpatterns =[
+urlpatterns = [
     path('register-customer', views.registerUser),
+    path('fetch-customer', views.fetchCustomer),
     path('login-user', views.loginUser),
     path('fetch-product', views.fetchProduct),
     path('add-cart', views.addToCart),

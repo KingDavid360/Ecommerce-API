@@ -10,7 +10,7 @@ from django.contrib.auth import login, authenticate
 import traceback
 from merchants.models import ProductModel,RatingsModel
 from .models import CartModel, CheckoutModel
-from .serializer import ProductSerializer, CartSerializer
+from .serializer import ProductSerializer, CartSerializer, UserSerializer
 
 @api_view(['post'])
 @csrf_exempt
@@ -52,6 +52,24 @@ def registerUser(request):
         traceback.print_exc()
         res = {"status": 500, "message": "Server error"}
         return JsonResponse(res, status=500, safe=False)
+    
+@api_view(['Get'])
+@csrf_exempt
+def fetchCustomer(request):
+    if request.user.is_authenticated:
+        try:
+            get_user = UserProfile.objects.all()
+            serializer = UserSerializer(get_user, many= True)
+            res = {"status": 200, "message": "successful", 'data': serializer.data}
+            return JsonResponse(res, status=200, safe=False)
+        except:
+            traceback.print_exc()
+            res = {"status": 500, "message": "Server error"}
+            return JsonResponse(res, status=500, safe=False)
+    else:
+        traceback.print_exc()
+        res = {"status": 400, "message": "user not authenticated"}
+        return JsonResponse(res, status=400, safe=False)
     
 @api_view(['post'])
 @csrf_exempt
